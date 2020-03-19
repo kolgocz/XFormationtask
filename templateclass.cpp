@@ -10,29 +10,21 @@ private:
     unsigned int m_nSize;
 
 public:
-    Array(int nSize)
-    {
-        if(nSize <= 0)
-        {
-            cout << "Wrong size value!!" << endl;
-        }
-    }
-
     Array(unsigned int nSize) : m_nSize(nSize)
     {
         if(m_nSize > 0)
-            m_pData = new (nothrow) T[m_nSize]; //nullptr od c++11 uzywany nowych standardow czyli c++11 wzwyz
+            m_pData = new (nothrow) T[m_nSize]; // If new returns NULL/nullptr we've got a problem. Check that in Get and Set.
     }
 
     virtual ~Array()
     {
         if(m_pData != NULL)
-            delete m_pData;    // deleting array using "delete[]"
+            delete m_pData;  // deleting array using "delete [] m_pData". This point is also not necessary. 2nd tescase
     }
 
     bool Set(unsigned int nPos, const T& Value)
     {
-        if(m_pData != NULL && nPos < m_nSize) // m_pData != NULL sprawdzac czy NULL rozwiazanie do 1st test case
+        if(nPos < m_nSize)  // check if "m_pData != NULL", by changing line to "if(m_pData != NULL && nPos < m_nSize)" - 1st test case
         {
             m_pData[nPos] = Value;
             return true;
@@ -42,7 +34,7 @@ public:
     }
     T Get(unsigned int nPos)
     {
-        if(m_pData != NULL && nPos < m_nSize) // m_pData != NULL sprawdzac czy NULL rozwiazanie do 1st test case
+        if(nPos < m_nSize)  // check if "m_pData != NULL", by changing line to "if(m_pData != NULL && nPos < m_nSize)" - 1st test case
             return m_pData[nPos];
         else
             return T();
@@ -51,29 +43,19 @@ public:
 
 int main()
 {
-    //1nd test case
-    //int a = 1;
-   // int b = 69;
-    Array<int> array;
-
-    Array<int> arr(-1);
-    arr.Set(0,1);
-
-    //array.Set(0,a);
-    //array.Set(1,b);
-    // jesli new zwroci nam NULL/nullptr to jest lipa
-    // jak zapobiec -> m_pData != NULL sprawdzac czy NULL w SET i GET
-
-    //2nd test case
-    //wszystko ok, usuwamy array, wywołuje się ~Array()
-    //jak zapobiec -> powinnismy usunac m_pData za pomoce delete []
-
-
-    //3rd test case
-    //przy tworzeniu obiektu do konstruktora trafia liczba ujemna, rzutowanie niejawne na unsigned int i wielka liczba
-    // jak zapobiec
-
-    cout << "Hello world!" << endl;
-
     return 0;
 }
+
+   /* 
+     1st test case
+     If new returns NULL/nullptr we've got a problem.
+     We can prevent that checking if "m_pData != NULL" in Set and Get
+
+     2nd test case
+     Incorect way of deleting array.
+     Use "delete[] m_pData" instead of "delete m_pData"
+     Check is also not necessary
+     
+     
+     III(*)Consider using C++11 or newer
+   */
